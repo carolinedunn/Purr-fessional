@@ -30,18 +30,30 @@ export async function generatePurrfessional(params: GenerationParams): Promise<s
   // Handle web URLs (from sample library)
   else if (imageData.startsWith('http')) {
     try {
+      console.log("Fetching and normalizing library image:", imageData);
       const imgResponse = await fetch(imageData);
+      if (!imgResponse.ok) throw new Error(`HTTP error! status: ${imgResponse.status}`);
       const blob = await imgResponse.blob();
-      finalMimeType = blob.type;
-      finalBase64 = await new Promise((resolve, reject) => {
+      
+      // Convert blob to Data URL to use the resize utility
+      const rawDataUrl = await new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => {
-          const res = reader.result as string;
-          resolve(res.split(',')[1]);
-        };
+        reader.onloadend = () => resolve(reader.result as string);
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       });
+
+      // Import the absolute minimum or dynamic import if needed, but since we're in a service, 
+      // we'll just handle the parsing here to avoid circular dependencies if any, 
+      // or just trust the one in App.tsx. 
+      // Actually, let's just use the same regex logic and assume the caller resizes if possible.
+      // But for library images, we definitely should resize here.
+      
+      const match = rawDataUrl.match(/^data:([^;]+);base64,(.+)$/);
+      if (match) {
+        finalMimeType = "image/jpeg";
+        finalBase64 = match[2];
+      }
     } catch (error) {
       console.error("Error fetching library image:", error);
       throw new Error("Failed to process library image. Please try uploading your own photo.");

@@ -21,6 +21,7 @@ import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { generatePurrfessional } from './services/gemini';
 import { cn } from '@/lib/utils';
+import { resizeAndNormalizeImage } from './lib/image';
 import InvestorRelations from './components/InvestorRelations';
 import HowItWorks from './components/HowItWorks';
 
@@ -71,9 +72,20 @@ export default function App() {
   const processFile = (file: File) => {
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setSelectedImage(event.target?.result as string);
-        setActiveTab('studio');
+      reader.onload = async (event) => {
+        const rawDataUrl = event.target?.result as string;
+        try {
+          // Normalize and resize image before storing in state
+          // This fixes mobile upload issues and ensures standard JPEG format
+          const normalizedImage = await resizeAndNormalizeImage(rawDataUrl);
+          setSelectedImage(normalizedImage);
+          setActiveTab('studio');
+        } catch (error) {
+          console.error("Image normalization failed:", error);
+          // Fallback to raw if normalization fails
+          setSelectedImage(rawDataUrl);
+          setActiveTab('studio');
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -132,9 +144,12 @@ export default function App() {
         url: generatedUrl,
         profession: finalProfession
       }, ...prev]);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Generation failed:", error);
-      alert("Oops! Cosette got a bit shy. Try another profession or style.");
+      // Detailed error for developers, simple message for users
+      const errorMessage = error?.message || "Unknown error";
+      console.log(`Detailed error trace: ${errorMessage}`);
+      alert(`Oops! Cosette got a bit shy. Try another profession or style. (Hint: check your connection or image size)`);
     } finally {
       setIsGenerating(false);
     }
