@@ -24,8 +24,15 @@ import { cn } from '@/lib/utils';
 import { resizeAndNormalizeImage } from './lib/image';
 import InvestorRelations from './components/InvestorRelations';
 import HowItWorks from './components/HowItWorks';
+import { ArrowRight, Sparkles as SparklesIcon, Palette as PaletteIcon } from 'lucide-react';
 
 // Constants
+const EXAMPLES = [
+  { id: 'original', label: 'The Muse', url: 'https://raw.githubusercontent.com/carolinedunn/Purr-fessional/refs/heads/main/sample-photos/cosette-cat.jpg', description: 'Original Photo' },
+  { id: 'astronaut', label: 'Astronaut', url: 'https://raw.githubusercontent.com/carolinedunn/Purr-fessional/bf8e66f9daccc701a1497529dc687512d0ed2e56/sample-photos/purr-fessional-astronaut.png', description: 'Cosmic Explorer' },
+  { id: 'professor', label: 'Professor', url: 'https://raw.githubusercontent.com/carolinedunn/Purr-fessional/bf8e66f9daccc701a1497529dc687512d0ed2e56/sample-photos/purr-fessional-professor.png', description: 'Academic Lead' },
+  { id: 'chef', label: 'Chef', url: 'https://raw.githubusercontent.com/carolinedunn/Purr-fessional/bf8e66f9daccc701a1497529dc687512d0ed2e56/sample-photos/purr-fessional-chef.png', description: 'Culinary Artist' },
+];
 const PROFESSIONS = [
   { id: 'astronaut', label: 'Astronaut', icon: '🚀' },
   { id: 'professor', label: 'Professor', icon: '🎓' },
@@ -205,7 +212,64 @@ export default function App() {
             exit={{ opacity: 0 }}
             className="max-w-7xl mx-auto px-6 py-12"
           >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            {/* Example Showcase Hero */}
+            <section className="mb-20 space-y-12">
+              <div className="text-center space-y-4 max-w-3xl mx-auto">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBDCCB]/30 text-[#2D2A26] text-xs font-semibold uppercase tracking-wider"
+                >
+                  <SparklesIcon className="w-3 h-3" />
+                  Visualizing Possibilities
+                </motion.div>
+                <h2 className="text-5xl md:text-6xl font-serif font-bold italic tracking-tight">From Muse to Masterpiece</h2>
+                <p className="text-lg text-muted-foreground font-medium">
+                  Witness the professional evolution. One snapshot, infinite career paths.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                {EXAMPLES.map((ex, idx) => (
+                  <motion.div
+                    key={ex.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="group relative"
+                  >
+                    <div className={cn(
+                      "aspect-square rounded-3xl overflow-hidden border shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:scale-[1.02]",
+                      ex.id === 'original' ? "border-[#EBDCCB] bg-white" : "border-transparent"
+                    )}>
+                      <img 
+                        src={ex.url} 
+                        alt={ex.label} 
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4 text-white">
+                        <p className="text-xs font-bold uppercase tracking-widest opacity-80">{ex.id === 'original' ? 'The Start' : 'The Result'}</p>
+                        <h4 className="text-lg font-serif italic font-bold">{ex.label}</h4>
+                      </div>
+                      {ex.id === 'original' && (
+                        <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-[#2D2A26] shadow-sm">
+                          Before
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              
+              <div className="flex justify-center items-center gap-4 text-[#2D2A26]/40">
+                <div className="h-px w-12 bg-current" />
+                <p className="text-xs font-bold uppercase tracking-[0.2em]">Start your cat's training below</p>
+                <div className="h-px w-12 bg-current" />
+              </div>
+            </section>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           
           {/* Left Column: Input & Controls */}
           <div className="lg:col-span-12 xl:col-span-12 2xl:col-span-5 space-y-8">
