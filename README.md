@@ -18,3 +18,13 @@ View your app in AI Studio: https://ai.studio/apps/7c23d89c-23ce-4efd-9c30-bfd63
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+---
+
+## 📚 A Woman’s Guide to Winning in Tech
+
+If you enjoyed this repo, check out my book, **A Woman’s Guide to Winning in Tech.** This book blends sharp humor with practical career strategies to help women navigate tech on their own terms—without changing who they are. Available on Amazon, Bookshop.org, Barnes & Noble, and IngramSpark.
+
+- 🌐 [Book Website](https://winningintech.com/) 
+- 📘 [Amazon](https://amzn.to/3YxHVO7)
+- [Instagram](https://www.instagram.com/winning.tech)
+- [Facebook](https://www.facebook.com/winningintech)
